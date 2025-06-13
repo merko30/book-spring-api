@@ -18,6 +18,9 @@ public class RestServiceApplication {
 	@Bean
 	public CommandLineRunner seed(BookRepository bookRepository) {
 		return args -> {
+			if(bookRepository.count() > 0) {
+				return; // Skip seeding if there are already books
+			}
 			bookRepository.save(new Book("The Great Gatsby", "F. Scott Fitzgerald"));
 			bookRepository.save(new Book("To Kill a Mockingbird", "Harper Lee"));
 			bookRepository.save(new Book("1984", "George Orwell"));
