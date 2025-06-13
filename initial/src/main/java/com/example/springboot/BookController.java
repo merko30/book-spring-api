@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.springboot.dto.CreateBookDto;
+import com.example.springboot.dto.UpdateBookDto;
 import com.example.springboot.entity.Book;
 import com.example.springboot.mapper.BookMapper;
 import com.example.springboot.repository.BookRepository;
@@ -21,14 +22,17 @@ import jakarta.validation.Valid;
 public class BookController {
 
 	private final BookRepository bookRepository;
+	private final BookMapper bookMapper;
 
-	public BookController(BookRepository bookRepository) {
+	public BookController(BookRepository bookRepository,
+			BookMapper bookMapper) {
 		this.bookRepository = bookRepository;
+		this.bookMapper = bookMapper;
 	}
 
 	@PostMapping("/books")
 	public Book createBook(@Valid @RequestBody CreateBookDto bookInput) {
-		Book book = BookMapper.toEntity(bookInput);
+		Book book = bookMapper.toEntity(bookInput);
 		return bookRepository.save(book);
 	}
 
@@ -44,11 +48,10 @@ public class BookController {
 	}
 
 	@PutMapping("/books/{id}")
-	public Book updateBook(@PathVariable Long id, Book book){
+	public Book updateBook(@PathVariable Long id, @Valid @RequestBody UpdateBookDto bookDto){
 		return bookRepository.findById(id)
 				.map(existingBook -> {
-					existingBook.setTitle(book.getTitle());
-					existingBook.setAuthor(book.getAuthor());
+					bookMapper.updateBookFromDto(bookDto, existingBook);
 					return bookRepository.save(existingBook);
 				})
 				.orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
