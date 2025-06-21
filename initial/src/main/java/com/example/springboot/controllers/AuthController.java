@@ -1,12 +1,14 @@
 package com.example.springboot.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,7 +55,7 @@ public class AuthController{
 
         userRepository.save(user);
 
-        return ResponseEntity.ok("Done");
+        return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
     }
 
 
@@ -66,9 +68,20 @@ public class AuthController{
         );
 
         String token = jwtService.generateToken(loginRequest.getUsername());
-        
+
+        System.out.println("Generated JWT Token: " + token);
 
         return ResponseEntity.ok(new AuthResponse(token));
     }
+
+    @GetMapping("/profile")
+    public ResponseEntity<User> getProfile(Authentication authentication) {
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return ResponseEntity.ok(user);
+    }
+
 
 }
