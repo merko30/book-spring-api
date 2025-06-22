@@ -1,6 +1,7 @@
 package com.example.springboot.mapper;
 
 import com.example.springboot.dto.CreateWorkoutSetDto;
+import com.example.springboot.dto.WorkoutSetDto;
 import com.example.springboot.entity.WorkoutSet;
 
 import org.mapstruct.*;
@@ -12,8 +13,5 @@ public interface WorkoutSetMapper {
 
     void updateWorkoutFromDto(CreateWorkoutSetDto dto, @MappingTarget WorkoutSet workout);
 
-    // @BeanMapping(nullValuePropertyMappingStrategy =
-    // NullValuePropertyMappingStrategy.IGNORE)
-    // void updateWorkoutSetFromDto(UpdateWorkoutSetDto dto, @MappingTarget
-    // WorkoutSet workout);
+    WorkoutSetDto toDto(WorkoutSet workoutSet);
 }

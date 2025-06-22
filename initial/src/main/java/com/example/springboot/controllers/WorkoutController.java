@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.springboot.dto.CreateWorkoutDto;
 import com.example.springboot.dto.UpdateWorkoutDto;
+import com.example.springboot.dto.WorkoutDto;
 import com.example.springboot.entity.User;
 import com.example.springboot.entity.Workout;
 import com.example.springboot.entity.WorkoutSet;
@@ -48,7 +49,7 @@ public class WorkoutController {
 	}
 
 	@PostMapping()
-	public ResponseEntity<Workout> createWorkout(@Valid @RequestBody CreateWorkoutDto workoutInput,
+	public ResponseEntity<WorkoutDto> createWorkout(@Valid @RequestBody CreateWorkoutDto workoutInput,
 			Authentication authentication) {
 		Workout workout = workoutMapper.toEntity(workoutInput);
 		System.out.println("DTO title: " + workoutInput.getTitle());
@@ -69,17 +70,24 @@ public class WorkoutController {
 		workout.setUser(user);
 		Workout savedWorkout = workoutRepository.save(workout);
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(savedWorkout);
+		WorkoutDto workoutToReturn = workoutMapper.toDto(savedWorkout);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(workoutToReturn);
 	}
 
 	@GetMapping()
-	public List<Workout> index() {
-		return workoutRepository.findAll();
+	public List<WorkoutDto> index() {
+		return workoutRepository.findAll().stream().map(record -> {
+			WorkoutDto dto = workoutMapper.toDto(record);
+			return dto;
+		}).toList();
 	}
 
 	@GetMapping("/{id}")
-	public Workout details(@PathVariable UUID id) {
-		return workoutRepository.findById(id)
+	public WorkoutDto details(@PathVariable UUID id) {
+		return workoutRepository.findById(id).map(value -> {
+			return workoutMapper.toDto(value);
+		})
 				.orElseThrow(() -> new RuntimeException("Workout not found with id: " + id.toString()));
 	}
 

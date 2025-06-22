@@ -27,6 +27,9 @@ public class WorkoutSet {
     private Integer repetitions;
 
     @Column(nullable = false)
+    private Integer value;
+
+    @Column(nullable = false)
     private Integer rest;
 
     @Column(nullable = false)

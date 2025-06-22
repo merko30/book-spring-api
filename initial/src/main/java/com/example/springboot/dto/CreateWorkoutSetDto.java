@@ -13,6 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CreateWorkoutSetDto {
 
+    @NotBlankIfPresent(message = "Value is required field")
+    private Integer value;
     @NotBlankIfPresent(message = "Repetition count is required field")
     private Integer repetitions;
     @NotBlankIfPresent(message = "Rest time is required field")

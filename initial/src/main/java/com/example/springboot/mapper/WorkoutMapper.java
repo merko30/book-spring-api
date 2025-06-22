@@ -1,18 +1,26 @@
 package com.example.springboot.mapper;
 
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.ReportingPolicy;
+
 import com.example.springboot.dto.CreateWorkoutDto;
 import com.example.springboot.dto.UpdateWorkoutDto;
+import com.example.springboot.dto.WorkoutDto;
 import com.example.springboot.entity.Workout;
-import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface WorkoutMapper {
 
-    @Mapping(source = "title", target = "title")
     Workout toEntity(CreateWorkoutDto dto);
-
-    void updateWorkoutFromDto(CreateWorkoutDto dto, @MappingTarget Workout workout);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateWorkoutFromDto(UpdateWorkoutDto dto, @MappingTarget Workout workout);
+
+    @Mapping(source = "title", target = "title")
+    WorkoutDto toDto(Workout workout);
+
 }
