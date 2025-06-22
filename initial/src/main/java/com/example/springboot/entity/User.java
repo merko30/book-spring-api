@@ -1,5 +1,7 @@
 package com.example.springboot.entity;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -20,6 +22,9 @@ public class User {
 
     @Column(nullable = false)
     private String role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Workout> workouts;
 
     public User(String username, String email, String password, String role) {
         this.username = username;

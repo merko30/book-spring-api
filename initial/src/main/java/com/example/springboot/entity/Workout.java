@@ -1,5 +1,7 @@
 package com.example.springboot.entity;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -13,6 +15,13 @@ public class Workout {
 
     @Column(nullable = true)
     private String description;
+
+    @OneToMany(mappedBy="workout", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<WorkoutSet> sets;
+
+    @ManyToOne
+    @JoinColumn(name="user_id", nullable = false)
+    private User user;
     
     public Workout() {
     }
