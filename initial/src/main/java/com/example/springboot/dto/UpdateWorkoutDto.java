@@ -2,18 +2,19 @@ package com.example.springboot.dto;
 
 import com.example.springboot.validation.NotBlankIfPresent;
 
-public class UpdateBookDto {
+public class UpdateWorkoutDto {
 
     @NotBlankIfPresent(message = "Title cannot be blank if present")
     private String title;
-    @NotBlankIfPresent(message = "Author cannot be blank if present")
-    private String author;
+    
+    
+    private String description;
 
-    public UpdateBookDto() {}
+    public UpdateWorkoutDto() {}
 
-    public UpdateBookDto(String title, String author) {
+    public UpdateWorkoutDto(String title, String description) {
         this.title = title;
-        this.author = author;
+        this.description = description;
     }
 
     public String getTitle() {
@@ -24,11 +25,11 @@ public class UpdateBookDto {
         this.title = title;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getDescription() {
+        return description;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
