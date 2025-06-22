@@ -39,12 +39,14 @@ public class WorkoutController {
 		this.workoutMapper = workoutMapper;
 		this.userRepository = userRepository;
 	}
-	
+
 	@PostMapping()
-	public ResponseEntity<Workout> createWorkout(@Valid @RequestBody CreateWorkoutDto workoutInput, Authentication authentication) {
+	public ResponseEntity<Workout> createWorkout(@Valid @RequestBody CreateWorkoutDto workoutInput,
+			Authentication authentication) {
 		Workout workout = workoutMapper.toEntity(workoutInput);
 		String username = authentication.getName();
-		User user = this.userRepository.findByUsername(username).orElseThrow(()-> new RuntimeException("User not found with username: " + username));
+		User user = this.userRepository.findByUsername(username)
+				.orElseThrow(() -> new RuntimeException("User not found with username: " + username));
 		workout.setUser(user);
 		Workout savedWorkout = workoutRepository.save(workout);
 
@@ -63,7 +65,7 @@ public class WorkoutController {
 	}
 
 	@PutMapping("/workouts/{id}")
-	public Workout updateWorkout(@PathVariable UUID id, @Valid @RequestBody UpdateWorkoutDto workoutDto){
+	public Workout updateWorkout(@PathVariable UUID id, @Valid @RequestBody UpdateWorkoutDto workoutDto) {
 		return workoutRepository.findById(id)
 				.map(existingWorkout -> {
 					workoutMapper.updateWorkoutFromDto(workoutDto, existingWorkout);
@@ -76,7 +78,5 @@ public class WorkoutController {
 	public void deleteWorkout(@PathVariable UUID id) {
 		workoutRepository.deleteById(id);
 	}
-
-
 
 }

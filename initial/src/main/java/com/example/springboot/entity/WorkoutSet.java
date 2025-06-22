@@ -7,12 +7,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-public class WorkoutSet{
+@Getter
+@Setter
+@NoArgsConstructor
+public class WorkoutSet {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Column(nullable = false)
@@ -27,9 +33,6 @@ public class WorkoutSet{
     @Column(nullable = true)
     private String description;
 
-    public WorkoutSet() {
-    }
-
     public WorkoutSet(Integer repetitions, Integer rest, String type, String description) {
         this.repetitions = repetitions;
         this.rest = rest;
@@ -38,6 +41,6 @@ public class WorkoutSet{
     }
 
     @ManyToOne
-    @JoinColumn(name="workout_id")
+    @JoinColumn(name = "workout_id")
     private Workout workout;
 }
