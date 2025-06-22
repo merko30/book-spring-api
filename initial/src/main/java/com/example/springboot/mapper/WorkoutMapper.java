@@ -5,10 +5,10 @@ import com.example.springboot.dto.UpdateWorkoutDto;
 import com.example.springboot.entity.Workout;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
-unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface WorkoutMapper {
 
+    @Mapping(source = "title", target = "title")
     Workout toEntity(CreateWorkoutDto dto);
 
     void updateWorkoutFromDto(CreateWorkoutDto dto, @MappingTarget Workout workout);

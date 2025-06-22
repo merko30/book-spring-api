@@ -1,5 +1,7 @@
 package com.example.springboot.dto;
 
+import java.util.List;
+
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,5 +17,7 @@ public class CreateWorkoutDto {
     private String title;
 
     private String description;
+
+    List<CreateWorkoutSetDto> sets;
 
 }
