@@ -52,4 +52,8 @@ public class Workout {
     public String getTitle() {
         return title;
     }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

@@ -3,6 +3,9 @@ package com.example.springboot.controllers;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,8 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.springboot.dto.CreateWorkoutDto;
 import com.example.springboot.dto.UpdateWorkoutDto;
+import com.example.springboot.entity.User;
 import com.example.springboot.entity.Workout;
 import com.example.springboot.mapper.WorkoutMapper;
+import com.example.springboot.repository.UserRepository;
 import com.example.springboot.repository.WorkoutRepository;
 
 import jakarta.validation.Valid;
@@ -26,17 +31,24 @@ public class WorkoutController {
 
 	private final WorkoutRepository workoutRepository;
 	private final WorkoutMapper workoutMapper;
+	private final UserRepository userRepository;
 
 	public WorkoutController(WorkoutRepository workoutRepository,
-			WorkoutMapper workoutMapper) {
+			WorkoutMapper workoutMapper, UserRepository userRepository) {
 		this.workoutRepository = workoutRepository;
 		this.workoutMapper = workoutMapper;
+		this.userRepository = userRepository;
 	}
-
+	
 	@PostMapping()
-	public Workout createWorkout(@Valid @RequestBody CreateWorkoutDto workoutInput) {
+	public ResponseEntity<Workout> createWorkout(@Valid @RequestBody CreateWorkoutDto workoutInput, Authentication authentication) {
 		Workout workout = workoutMapper.toEntity(workoutInput);
-		return workoutRepository.save(workout);
+		String username = authentication.getName();
+		User user = this.userRepository.findByUsername(username).orElseThrow(()-> new RuntimeException("User not found with username: " + username));
+		workout.setUser(user);
+		Workout savedWorkout = workoutRepository.save(workout);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(savedWorkout);
 	}
 
 	@GetMapping("/workouts")

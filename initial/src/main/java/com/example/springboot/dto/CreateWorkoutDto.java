@@ -1,5 +1,7 @@
 package com.example.springboot.dto;
 
+import com.example.springboot.entity.User;
+
 import jakarta.validation.constraints.NotBlank;
 
 public class CreateWorkoutDto {
