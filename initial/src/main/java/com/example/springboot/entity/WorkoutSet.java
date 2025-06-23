@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,6 +21,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class WorkoutSet {
 
+    public enum WorkoutSetType {
+        TIME,
+        DISTANCE
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -26,22 +33,48 @@ public class WorkoutSet {
     @Column(nullable = false)
     private Integer repetitions;
 
-    @Column(nullable = false)
-    private Integer value;
+    // Deprecated: use valueTime/valueDistance instead
+    // @Column(nullable = false)
+    // private Integer value;
 
-    @Column(nullable = false)
-    private Integer rest;
+    // Deprecated: use restTime/restDistance instead
+    // @Column(nullable = false)
+    // private Integer rest;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String type; // e.g., "repetitions", "time"
+    private WorkoutSetType type; // TIME or DISTANCE for value
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private WorkoutSetType restType; // TIME or DISTANCE for rest
+
+    // Value fields
+    @Column(nullable = true)
+    private Integer valueTime; // in seconds, if type == TIME
+
+    @Column(nullable = true)
+    private Integer valueDistance; // in meters, if type == DISTANCE
+
+    // Rest fields
+    @Column(nullable = true)
+    private Integer restTime; // in seconds, if type == TIME
+
+    @Column(nullable = true)
+    private Integer restDistance; // in meters, if type == DISTANCE
 
     @Column(nullable = true)
     private String description;
 
-    public WorkoutSet(Integer repetitions, Integer rest, String type, String description) {
+    public WorkoutSet(Integer repetitions, WorkoutSetType type, WorkoutSetType restType, Integer valueTime,
+            Integer valueDistance, Integer restTime, Integer restDistance, String description) {
         this.repetitions = repetitions;
-        this.rest = rest;
         this.type = type;
+        this.restType = restType;
+        this.valueTime = valueTime;
+        this.valueDistance = valueDistance;
+        this.restTime = restTime;
+        this.restDistance = restDistance;
         this.description = description;
     }
 
