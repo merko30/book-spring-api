@@ -2,7 +2,6 @@ package com.example.springboot.mapper;
 
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
@@ -20,7 +19,6 @@ public interface WorkoutMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateWorkoutFromDto(UpdateWorkoutDto dto, @MappingTarget Workout workout);
 
-    @Mapping(source = "title", target = "title")
     WorkoutDto toDto(Workout workout);
 
 }

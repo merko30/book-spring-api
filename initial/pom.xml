@@ -97,6 +97,9 @@
             <configuration>
                 <source>17</source> <!-- or your Java version -->
                 <target>17</target>
+				<compilerArgs>
+					<arg>-Amapstruct.verbose=true</arg>
+				</compilerArgs>
                 <annotationProcessorPaths>
                     <path>
                         <groupId>org.mapstruct</groupId>

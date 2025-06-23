@@ -51,9 +51,10 @@ public class WorkoutController {
 	@PostMapping()
 	public ResponseEntity<WorkoutDto> createWorkout(@Valid @RequestBody CreateWorkoutDto workoutInput,
 			Authentication authentication) {
+
 		Workout workout = workoutMapper.toEntity(workoutInput);
-		System.out.println("DTO title: " + workoutInput.getTitle());
-		System.out.println("Mapped Workout title: " + workout.getTitle());
+
+		// workout sets
 		List<WorkoutSet> createWorkoutSets = Optional.ofNullable(workoutInput.getSets())
 				.orElse(Collections.emptyList())
 				.stream()
@@ -64,12 +65,17 @@ public class WorkoutController {
 				}).toList();
 
 		workout.setSets(createWorkoutSets);
+
+		// user
 		String username = authentication.getName();
 		User user = this.userRepository.findByUsername(username)
 				.orElseThrow(() -> new RuntimeException("User not found with username: " + username));
 		workout.setUser(user);
+
+		// save
 		Workout savedWorkout = workoutRepository.save(workout);
 
+		// convert to dto
 		WorkoutDto workoutToReturn = workoutMapper.toDto(savedWorkout);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(workoutToReturn);
@@ -95,7 +101,21 @@ public class WorkoutController {
 	public Workout updateWorkout(@PathVariable UUID id, @Valid @RequestBody UpdateWorkoutDto workoutDto) {
 		return workoutRepository.findById(id)
 				.map(existingWorkout -> {
+					// title, description etc.
 					workoutMapper.updateWorkoutFromDto(workoutDto, existingWorkout);
+
+					existingWorkout.getSets().clear();
+
+					List<WorkoutSet> newSets = Optional.ofNullable(workoutDto.getSets()).orElse(List.of())
+							.stream()
+							.map(setDto -> {
+								WorkoutSet setRecord = workoutSetMapper.toEntity(setDto);
+								setRecord.setWorkout(existingWorkout);
+								return setRecord;
+							}).toList();
+
+					existingWorkout.getSets().addAll(newSets);
+
 					return workoutRepository.save(existingWorkout);
 				})
 				.orElseThrow(() -> new RuntimeException("Workout not found with id: " + id));

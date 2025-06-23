@@ -1,6 +1,7 @@
 package com.example.springboot.mapper;
 
 import com.example.springboot.dto.CreateWorkoutSetDto;
+import com.example.springboot.dto.UpdateWorkoutSetDto;
 import com.example.springboot.dto.WorkoutSetDto;
 import com.example.springboot.entity.WorkoutSet;
 
@@ -11,7 +12,11 @@ public interface WorkoutSetMapper {
 
     WorkoutSet toEntity(CreateWorkoutSetDto dto);
 
-    void updateWorkoutFromDto(CreateWorkoutSetDto dto, @MappingTarget WorkoutSet workout);
+    WorkoutSet toEntity(WorkoutSetDto dto);
+
+    WorkoutSet toEntity(UpdateWorkoutSetDto dto);
+
+    void updateWorkoutFromDto(UpdateWorkoutSetDto dto, @MappingTarget WorkoutSet workout);
 
     WorkoutSetDto toDto(WorkoutSet workoutSet);
 }

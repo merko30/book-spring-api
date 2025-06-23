@@ -1,5 +1,7 @@
 package com.example.springboot.dto;
 
+import java.util.List;
+
 import com.example.springboot.validation.NotBlankIfPresent;
 
 import lombok.AllArgsConstructor;
@@ -17,5 +19,7 @@ public class UpdateWorkoutDto {
     private String title;
 
     private String description;
+
+    private List<UpdateWorkoutSetDto> sets;
 
 }
